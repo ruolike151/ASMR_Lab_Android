@@ -599,7 +599,7 @@ public class MainActivity extends Activity {
 
         String outName = makeLrcOutputName(name);
         boolean[] fallback = new boolean[1];
-        try (OutputStream os = openOutputForInput(input, outName, "text/plain", fallback)) {
+        try (OutputStream os = openOutputForInput(input, outName, "application/octet-stream", fallback)) {
             os.write(lrc.toString().getBytes(StandardCharsets.UTF_8));
             if (fallback[0]) {
                 addResultFile(new File(getFallbackOutputDir(), outName), "text/plain");
@@ -1059,9 +1059,21 @@ public class MainActivity extends Activity {
 
     private String makeLrcOutputName(String inputName) {
         String base = stripExtension(inputName);
-        while (base.toLowerCase(Locale.ROOT).endsWith(".mp3")) {
-            base = base.substring(0, base.length() - 4);
-        }
+        String[] removableExtensions = {
+                ".mp3", ".wav", ".flac", ".m4a", ".aac", ".ogg", ".opus", ".wma", ".ape", ".lrc"
+        };
+        boolean removed;
+        do {
+            removed = false;
+            String lower = base.toLowerCase(Locale.ROOT);
+            for (String extension : removableExtensions) {
+                if (lower.endsWith(extension)) {
+                    base = base.substring(0, base.length() - extension.length());
+                    removed = true;
+                    break;
+                }
+            }
+        } while (removed);
         if (base.trim().isEmpty()) {
             base = "output";
         }
