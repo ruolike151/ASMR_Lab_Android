@@ -1,0 +1,13 @@
+.gradle/
+build/
+app/build/
+local.properties
+keystore.properties
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+*.jks
+*.keystore
+ASMR输出/
