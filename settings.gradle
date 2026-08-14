@@ -9,5 +9,5 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'ASMR Tools'
+rootProject.name = 'ASMR Tool Android'
 include ':app'
