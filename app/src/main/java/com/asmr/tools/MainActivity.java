@@ -597,7 +597,7 @@ public class MainActivity extends Activity {
             }
         }
 
-        String outName = stripExtension(name) + ".lrc";
+        String outName = makeLrcOutputName(name);
         boolean[] fallback = new boolean[1];
         try (OutputStream os = openOutputForInput(input, outName, "text/plain", fallback)) {
             os.write(lrc.toString().getBytes(StandardCharsets.UTF_8));
@@ -724,7 +724,7 @@ public class MainActivity extends Activity {
                 }
             }
 
-            File out = new File(input.getParentFile(), stripExtension(input.getName()) + ".lrc");
+            File out = new File(input.getParentFile(), makeLrcOutputName(input.getName()));
             try (OutputStream os = new FileOutputStream(out)) {
                 os.write(lrc.toString().getBytes(StandardCharsets.UTF_8));
             }
@@ -1055,6 +1055,17 @@ public class MainActivity extends Activity {
             return name.substring(0, dot);
         }
         return name;
+    }
+
+    private String makeLrcOutputName(String inputName) {
+        String base = stripExtension(inputName);
+        while (base.toLowerCase(Locale.ROOT).endsWith(".mp3")) {
+            base = base.substring(0, base.length() - 4);
+        }
+        if (base.trim().isEmpty()) {
+            base = "output";
+        }
+        return base + ".lrc";
     }
 
     private byte[] readAll(InputStream in) throws Exception {
